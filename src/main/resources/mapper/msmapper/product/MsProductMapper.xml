@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.transmission.msdata.product.mapper.MsProductMapper">
+
+
+    <select id="getCountAll" resultType="java.lang.Integer">
+         select count(1) from product
+    </select>
+    <insert id="savaAll" parameterType="java.util.Map">
+      INSERT INTO `product` VALUES (#{AccountID}, #{ProductID}, #{Name}, #{NamePY}, #{Source},
+         #{ProductPrice},#{ProductPrice1}, #{ProductPrice2},#{ProductPrice3}, #{ProductInPrice},
+         #{CreateDate},#{UpdateDate}, #{delflag}, #{Specific}, #{Origion}, #{Unit}, #{MainMemo},
+         #{BaseCode}, #{ColorSet}, #{SizeSet},#{BaseName},#{ColorSetName},#{SizeSetName}, #{BaseNamePY},
+         #{BarCode}, #{IsBOM},#{ProductClass}, #{TaxClass}, #{brand},#{dxproductid}, #{model},#{GJImei},
+         #{ZDGSProductID},#{ZKProductId},#{ZKQuantity},0);
+    </insert>
+    <insert id="saveAllList" parameterType="java.util.List">
+        INSERT INTO `product`
+        (`AccountID`,`ProductID`, `Name`, `NamePY`, `Source`,
+        `ProductPrice`,`ProductPrice1`,`ProductPrice2`,`ProductPrice3`,`ProductInPrice`,
+        `CreateDate`,`UpdateDate`,`delflag`,`Specific`,`Origion`,`Unit`,`MainMemo`,
+        `BaseCode`,`ColorSet`,`SizeSet`,`BaseName`,`ColorSetName`,`SizeSetName`,`BaseNamePY`,
+        `BarCode`,`IsBOM`,`ProductClass`,`TaxClass`,`brand`,`dxproductid`,`model`,`GJImei`,
+        `ZDGSProductID`,`ZKProductId`,`ZKQuantity`)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.AccountID}, #{item.ProductID}, #{item.Name}, #{item.NamePY}, #{item.Source},
+            #{item.ProductPrice},#{item.ProductPrice1}, #{item.ProductPrice2},#{item.ProductPrice3}, #{item.ProductInPrice},
+            #{item.CreateDate},#{item.UpdateDate}, #{item.delflag}, #{item.Specific}, #{item.Origion}, #{item.Unit}, #{item.MainMemo},
+            #{item.BaseCode}, #{item.ColorSet}, #{item.SizeSet},#{item.BaseName},#{item.ColorSetName},#{item.SizeSetName}, #{item.BaseNamePY},
+            #{item.BarCode}, #{item.IsBOM},#{item.ProductClass}, #{item.TaxClass}, #{item.brand},#{item.dxproductid}, #{item.model},#{item.GJImei},
+            #{item.ZDGSProductID},#{item.ZKProductId},#{item.ZKQuantity}
+            )
+        </foreach>
+    </insert>
+
+    <update id="callProductNew" parameterType="java.util.Date" statementType="CALLABLE">
+		{call p_import_product_new(#{updateDate,mode=IN})}
+	</update>
+
+    <select id="findProductExist" resultType="java.lang.Integer">
+      SELECT COUNT(1) from Product WHERE AccountID = #{AccountID} AND ProductId=#{ProductID}
+    </select>
+
+    <update id="updateProductInfo" parameterType="java.util.Map">
+        update `product` set
+        <if test="ProductID != null and ProductID != '' ">
+        `ProductID`=#{ProductID},
+        </if>
+        <if test="Name != null and Name != '' ">
+        `Name`=#{Name},
+        </if>
+        <if test="NamePY != null and NamePY != '' ">
+        `NamePY`=#{NamePY},
+        </if>
+        <if test="Source != null and Source != '' ">
+        `Source`= #{Source},
+        </if>
+        <if test="ProductPrice != null and ProductPrice != '' ">
+        `ProductPrice`= #{ProductPrice},
+        </if>
+        <if test="ProductPrice1 != null and ProductPrice1 != '' ">
+        `ProductPrice1`=#{ProductPrice1},
+        </if>
+        <if test="ProductPrice2 != null and ProductPrice2 != '' ">
+        `ProductPrice2`=#{ProductPrice2},
+        </if>
+        <if test="ProductPrice3 != null and ProductPrice3 != '' ">
+        `ProductPrice3`=#{ProductPrice3},
+        </if>
+        <if test="ProductInPrice != null and ProductInPrice != '' ">
+        `ProductInPrice`=#{ProductInPrice},
+        </if>
+        <if test="CreateDate != null ">
+        `CreateDate`=#{CreateDate},
+        </if>
+        <if test="UpdateDate != null ">
+        `UpdateDate`=#{UpdateDate},
+        </if>
+        <if test="delflag != null and delflag != '' ">
+        `delflag`=#{delflag},
+        </if>
+        <if test="Specific != null and Specific != '' ">
+        `Specific`=#{Specific},
+        </if>
+        <if test="Origion != null and Origion != '' ">
+        `Origion`=#{Origion},
+        </if>
+        <if test="Unit != null and Unit != '' ">
+        `Unit`=#{Unit},
+        </if>
+        <if test="MainMemo != null and MainMemo != '' ">
+        `MainMemo`=#{MainMemo},
+        </if>
+        <if test="BaseCode != null and BaseCode != '' ">
+        `BaseCode`=#{BaseCode},
+        </if>
+        <if test="ColorSet != null and ColorSet != '' ">
+        `ColorSet`=#{ColorSet},
+        </if>
+        <if test="SizeSet != null and SizeSet != '' ">
+        `SizeSet`=#{SizeSet},
+        </if>
+        <if test="BaseName != null and BaseName != '' ">
+        `BaseName`=#{BaseName},
+        </if>
+        <if test="ColorSetName != null and ColorSetName != '' ">
+        `ColorSetName`=#{ColorSetName},
+        </if>
+        <if test="SizeSetName != null and SizeSetName != '' ">
+        `SizeSetName`=#{SizeSetName},
+        </if>
+        <if test="BaseNamePY != null and BaseNamePY != '' ">
+        `BaseNamePY`=#{BaseNamePY},
+        </if>
+        <if test="BarCode != null and BarCode != '' ">
+        `BarCode`=#{BarCode},
+        </if>
+        <if test="IsBOM != null and IsBOM != '' ">
+        `IsBOM`=#{IsBOM},
+        </if>
+        <if test="ProductClass != null and ProductClass != '' ">
+        `ProductClass`=#{ProductClass},
+        </if>
+        <if test="TaxClass != null and TaxClass != '' ">
+        `TaxClass`=#{TaxClass},
+        </if>
+        <if test="brand != null and brand != '' ">
+        `brand`=#{brand},
+        </if>
+        <if test="dxproductid != null and dxproductid != '' ">
+        `dxproductid`=#{dxproductid},
+        </if>
+        <if test="model != null and model != '' ">
+        `model`=#{model},
+        </if>
+        <if test="GJImei != null and GJImei != '' ">
+        `GJImei`=#{GJImei},
+        </if>
+        <if test="ZDGSProductID != null and ZDGSProductID != '' ">
+        `ZDGSProductID`=#{ZDGSProductID},
+        </if>
+        <if test="ZKProductId != null and ZKProductId != '' ">
+        `ZKProductId`=#{ZKProductId},
+        </if>
+        <if test="ZKQuantity != null and ZKQuantity != '' ">
+        `ZKQuantity`=#{ZKQuantity},
+        </if>
+        `AccountID`=#{AccountID}
+        where AccountID = #{AccountID} AND ProductId=#{ProductID}
+    </update>
+   <!-- <update id="callPInitKc" parameterType="java.util.Date" statementType="CALLABLE">
+		{call p_init_kc(#{sysTime,mode=IN,jdbcType=datetime})}
+	</update>-->
+</mapper>

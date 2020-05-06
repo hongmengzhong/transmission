@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.transmission.msdata.product.mapper.MsProductImeiMapper">
+
+
+    <insert id="saveProductImei" parameterType="java.util.Map">
+        REPLACE into `storeinvserial` (AccountID,Store,ProductID,ProductSerial,InstoreDate,STSDate,CreateDate,ProductSource,del_flag,syn_flag)
+        values (#{AccountID},#{Store},#{ProductID},#{ProductSerial},#{InstoreDate},#{STSDate},#{CreateDate},#{ProductSource},'0','0')
+    </insert>
+
+    <delete id="deleteProductImei" parameterType="java.util.Map">
+      delete from StoreInvSerial where AccountID = #{AccountID} AND ProductSerial = #{ProductSerial} AND Store = #{Store}
+    </delete>
+    <update id="updateDelProductImei" parameterType="java.util.Map">
+        update StoreInvSerial set del_flag='1',CreateDate = #{CreateDate}
+         where AccountID = #{AccountID} AND ProductSerial = #{ProductSerial} AND Store = #{Store}
+    </update>
+    <insert id="saveProductImeiList" parameterType="java.util.List">
+        REPLACE into `storeinvserial`
+        (AccountID,Store,ProductID,ProductSerial,InstoreDate,STSDate,CreateDate,ProductSource)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+           (#{item.AccountID},
+            #{item.Store},
+            #{item.ProductID},
+            #{item.ProductSerial},
+            #{item.InstoreDate},
+            #{item.STSDate},
+            #{item.CreateDate},
+            #{item.ProductSource})
+        </foreach>
+    </insert>
+
+
+    <update id="callPsynImei" parameterType="java.util.Date" statementType="CALLABLE">
+		{call p_syn_imei(#{updateTime,mode=IN})}
+	</update>
+
+</mapper>

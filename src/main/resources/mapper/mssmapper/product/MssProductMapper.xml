@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.transmission.mssdata.product.mapper.MssProductMapper">
+
+
+
+    <select id="getCountAll" resultType="java.util.Map">
+           <![CDATA[
+                  select AccountID,ProductID, Name, NamePY, Source,
+                        ProductPrice,ProductPrice1,ProductPrice2,ProductPrice3,ProductInPrice,
+                        CONVERT(varchar(100), CreateDate, 120) AS CreateDate,CONVERT(varchar(100), UpdateDate, 120) AS UpdateDate,delflag,Specific,Origion,Unit,MainMemo,
+                        BaseCode,ColorSet,SizeSet,BaseName,ColorSetName,SizeSetName,BaseNamePY,
+                        BarCode,IsBOM,ProductClass,TaxClass,brand,dxproductid,model,GJImei,
+                        ZDGSProductID,ZKProductId,ZKQuantity
+                 from product where AccountID = #{acoundid} and UpdateDate >= #{startTime} and UpdateDate < #{endTime}
+              ]]>
+    </select>
+
+    <select id="getAccountIdList" resultType="java.lang.Integer">
+        SELECT DISTINCT accountid FROM DXT_YK_DEPOT
+    </select>
+</mapper>

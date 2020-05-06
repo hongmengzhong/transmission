@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.transmission.msdata.product.mapper.MsProductStoreMapper">
+
+
+
+    <insert id="saveProductStore" parameterType="java.util.Map">
+        REPLACE INTO `product_store` (`AccountID`,`ProductID`,`Store`,`ProductNumber`,
+        `ProductPrice`,`pmin`,`pmax`,`pmid`,`Position`,`updatedate`,`del_flag`)VALUES
+         (#{AccountID}, #{ProductID}, #{Store}, #{ProductNumber}, #{ProductPrice}, #{pmin}, #{pmax}, #{pmid}, #{Position}, #{updatedate},'0');
+    </insert>
+    <delete id="deleteProductStore" parameterType="java.util.Map">
+      delete from Product_Store where AccountID = #{AccountID} AND ProductID = #{ProductID} AND Store = #{Store}
+    </delete>
+    <update id="updateDelProductStore" parameterType="java.util.Map">
+      update Product_Store set del_flag = '1',ProductNumber=0,updatedate = #{updatedate}
+      where AccountID = #{AccountID} AND ProductID = #{ProductID} AND Store = #{Store}
+    </update>
+    <insert id="saveProductStoreList" parameterType="java.util.List">
+        REPLACE INTO `product_store`
+        (`AccountID`,`ProductID`,`Store`,`ProductNumber`,
+        `ProductPrice`,`pmin`,`pmax`,`pmid`,`Position`,`updatedate`)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+         (#{item.AccountID},
+          #{item.ProductID},
+          #{item.Store},
+          #{item.ProductNumber},
+          #{item.ProductPrice},
+          #{item.pmin},
+          #{item.pmax},
+          #{item.pmid},
+          #{item.Position},
+          #{item.updatedate}
+            )
+        </foreach>
+    </insert>
+    <insert id="saveAutoStoreList" parameterType="java.util.List">
+        REPLACE INTO `store`
+        (`AccountID`,`ID`, `Store`, `parentID`, `IsRoute`,
+        `IsDeleted`,`NamePY`,`UpdateDate`,`StsStoreID`,`createdate`,
+        `ispserial`,`levelid`,`orgid`,`StoreClass`,`isprice`,`areaid`,`XSF_NSRSBH`,
+        `XSF_MC`,`XSF_DZDH`,`Code`,`IsZJRoute`,`XSF_KHZH`,`city`,`province`)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.AccountID}, #{item.ID}, #{item.Store}, #{item.parentID}, #{item.IsRoute},
+            #{item.IsDeleted},#{item.NamePY}, #{item.UpdateDate},#{item.StsStoreID}, #{item.createdate},
+            #{item.ispserial},#{item.levelid}, #{item.orgid}, #{item.StoreClass}, #{item.isprice}, #{item.areaid}, #{item.XSF_NSRSBH},
+            #{item.XSF_MC}, #{item.XSF_DZDH}, #{item.Code},#{item.IsZJRoute},#{item.XSF_KHZH},#{item.city}, #{item.province}
+            )
+        </foreach>
+    </insert>
+
+    <update id="callPinitKc" parameterType="java.util.Date" statementType="CALLABLE">
+		{call p_init_kc(#{updateTime,mode=IN})}
+	</update>
+
+</mapper>

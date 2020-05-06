@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.transmission.mssdata.product.mapper.MssProductStoreMapper">
+
+
+
+    <select id="getAllProductStore" resultType="java.util.Map">
+           <![CDATA[
+                  select  s.AccountID,s.ProductID,s.Store,s.ProductNumber,
+                        s.ProductPrice,s.pmin,s.pmax,s.pmid,s.Position,CONVERT(varchar(100), s.updatedate, 120) AS updatedate from Product_Store s
+                  INNER JOIN DXT_YK_DEPOT d on s.Store = d.id
+                   where s.AccountID = #{acoundid} and s.updatedate >= #{startTime} and s.updatedate < #{endTime}
+              ]]>
+    </select>
+    <select id="getdelAllProductStore" resultType="java.util.Map">
+           <![CDATA[
+                  select AccountID,ProductID,Store,ProductNumber,
+                  ProductPrice,pmin,pmax,pmid,Position,CONVERT(varchar(100), updatedate, 120) AS updatedate ,CONVERT(varchar(100), deldate, 120) AS deldate
+                 from DM_Product_Store where AccountID = #{acoundid} and deldate >= #{startTime} and deldate < #{endTime}
+              ]]>
+    </select>
+    <select id="getAutoDataStore" resultType="java.util.Map">
+           <![CDATA[
+                  select AccountID,ID, Store, parentID, IsRoute,
+                    IsDeleted,NamePY,CONVERT(varchar(100), UpdateDate, 120) AS UpdateDate,StsStoreID,CONVERT(varchar(100), createdate, 120) AS createdate,
+                    ispserial,levelid,orgid,StoreClass,isprice,areaid,XSF_NSRSBH,
+                    XSF_MC,XSF_DZDH,Code,IsZJRoute,XSF_KHZH,city,province  from Store where AccountID = #{acoundid} and UpdateDate >= #{startTime} and UpdateDate < #{endTime}
+              ]]>
+    </select>
+    <select id="getAllProductStore1" resultType="java.util.Map">
+           <![CDATA[
+                   select  s.AccountID,s.ProductID,s.Store,s.ProductNumber,
+                    s.ProductPrice,s.pmin,s.pmax,s.pmid,s.Position,CONVERT(varchar(100), s.updatedate, 120) AS updatedate  from Product_Store s
+                  INNER JOIN DXT_YK_DEPOT d on s.Store = d.id where s.AccountID =  #{acoundid}
+              ]]>
+    </select>
+</mapper>

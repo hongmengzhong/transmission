@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.transmission.mssdata.autodata.mapper.AutoDataMapper">
+
+    <select id="getXlsAutoSysTimestampInfo" resultType="java.util.Map">
+        SELECT * FROM xls_auto_sys_Timestamp WHERE accountid = #{accountid} AND Class_name = #{className}
+    </select>
+
+    <select id="getSysDate" resultType="java.util.Date">
+        SELECT CONVERT(varchar(100), GETDATE(), 120);
+    </select>
+
+    
+    <update id="updateTableInfo">
+        update xls_auto_sys_Timestamp set Update_Date = #{sysTime},Beging_Date = #{sysTime},end_date= GetDate()
+        where  accountid = #{accountid} AND Class_name = #{className}
+    </update>
+    <update id="updateAutoProductAllDate">
+        update xls_auto_sys_Timestamp set Update_Date = #{sysTime},Beging_Date = #{sysTime},end_date= GetDate()
+        where  Class_name = #{className}
+    </update>
+    <select id="getUpdateAllTime" resultType="java.util.Date">
+        SELECT CONVERT(varchar(100), Update_Date, 120) AS Update_Date from xls_auto_sys_Timestamp WHERE Class_name = #{className}
+    </select>
+</mapper>

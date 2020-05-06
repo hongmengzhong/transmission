@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.transmission.mssdata.product.mapper.MssProductImeiMapper">
+
+
+
+    <select id="getProductImeiList" resultType="java.util.Map">
+           <![CDATA[
+                  select s.AccountID,s.Store,s.ProductID,s.ProductSerial,s.InstoreDate,s.STSDate,CONVERT(varchar(100), s.CreateDate, 120) AS CreateDate,s.ProductSource
+                  from StoreInvSerial s INNER JOIN DXT_YK_DEPOT d on s.Store = d.id  where s.AccountID = #{acoundid} and s.CreateDate >= #{startTime} and s.CreateDate < #{endTime}
+              ]]>
+    </select>
+    <select id="getDelProductImeiList" resultType="java.util.Map">
+           <![CDATA[
+                  select AccountID,Store,ProductID,ProductSerial,InstoreDate,STSDate,CONVERT(varchar(100), CreateDate, 120) AS CreateDate,ProductSource
+                  from DM_StoreInvSerial where AccountID = #{acoundid} and CreateDate >= #{startTime} and CreateDate < #{endTime}
+              ]]>
+    </select>
+</mapper>
