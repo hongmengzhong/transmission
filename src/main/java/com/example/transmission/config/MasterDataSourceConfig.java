@@ -23,6 +23,7 @@ public class MasterDataSourceConfig {
     static final String PACKAGE = "com.example.transmission.msdata";
     static final String MAPPER_LOCATION = "classpath:mapper/master/*.xml";
 
+
     @Value("${master.datasource.url}")
     private String url;
 

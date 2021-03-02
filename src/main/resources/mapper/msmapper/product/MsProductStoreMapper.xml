@@ -55,5 +55,9 @@
     <update id="callPinitKc" parameterType="java.util.Date" statementType="CALLABLE">
 		{call p_init_kc(#{updateTime,mode=IN})}
 	</update>
-
+    <select id="findSynchronizationStock" resultType="java.lang.String">
+        <![CDATA[
+            select DISTINCT productID from xls_product_stocks where update_date >= #{startTime} and update_date < #{endTime}
+        ]]>
+    </select>
 </mapper>

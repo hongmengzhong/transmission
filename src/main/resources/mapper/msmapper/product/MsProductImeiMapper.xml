@@ -35,5 +35,7 @@
     <update id="callPsynImei" parameterType="java.util.Date" statementType="CALLABLE">
 		{call p_syn_imei(#{updateTime,mode=IN})}
 	</update>
-
+    <select id="findSynchronizationImei" resultType="java.lang.String">
+        <![CDATA[  select DISTINCT productID from xls_product_imeis where update_date >= #{startTime} and update_date < #{endTime} ]]>
+    </select>
 </mapper>

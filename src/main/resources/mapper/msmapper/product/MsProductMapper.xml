@@ -153,4 +153,69 @@
    <!-- <update id="callPInitKc" parameterType="java.util.Date" statementType="CALLABLE">
 		{call p_init_kc(#{sysTime,mode=IN,jdbcType=datetime})}
 	</update>-->
+    <select id="productSolrdataList" resultType="com.example.transmission.msdata.product.entity.Product">
+        SELECT
+        if(hd.id is null,0,1) as heDeFlag,
+        a.id AS "id",
+        a.name AS "name",
+        a.bar_code AS "barCode",
+        a.SERIALZ_NUMBER AS "serialzNumber",
+        a.XLS_PRODUCT_CATEGORY_ID as "productCategory.id",
+        a.retail_price AS "retailPrice",
+        a.imei_manage AS "imeiManage",
+        a.member_price AS "memberPrice",
+        a.price_type AS "priceType",
+        rf.productrfid AS "rfid",
+        a.BATCH_MANAGE AS "batchManage",
+        a.UNIT_TYPE AS "unitType",
+        a.XLS_PRODUCT_UNIT_ID AS "productUnit.id",
+        a.XLS_PRODUCT_MULTIPLE_UNIT_ID AS "productMultipleUnit.id",
+        a.mnemonic_code AS "mnemonicCode",
+        a.commodity_initials AS "commodityInitials",
+        pu.`NAME` AS "productUnit.name",
+        su.ID AS "productSubUnit.id",
+        su.`NAME` AS "productSubUnit.name",
+        su.COUNT AS "productSubUnit.count",
+        su.MAIN_UNIT_FLAG AS "productSubUnit.mainUnitFlag",
+        up.PRICE AS "productUnitPrice.price",
+        pp.id AS "productPhoto.id",
+        pp.remarks AS "productPhoto.remarks",
+        pp.name AS "productPhoto.name",
+        pp.url AS "productPhoto.url",
+        pp.photo_type AS "productPhoto.photoType",
+        pp.`order` AS "productPhoto.order",
+        (CASE
+        WHEN (SELECT  COUNT(1) FROM xls_product_imeis WHERE `DEL_FLAG` ='0' and companycode = a.`COMPANYCODE`  and a.`ID` =productID ) >0 THEN '1'
+        ELSE '2'
+        END) as "imeiSelectFlag",
+        (CASE
+        WHEN a.SERIALZ_NUMBER is not NULL THEN '1'
+        ELSE '2'
+        END) as "serialzNumberSelectFlag"
+        ,imei.`productImei` ,
+        (CASE WHEN ISNULL(imei.`productImei`) then xs.ktypeId else imei.ktypeId END) AS "ktypeId"
+        FROM xls_product a
+        JOIN xls_product_category pc ON a.XLS_PRODUCT_CATEGORY_ID=pc.ID and a.companycode = pc.companycode
+        left join xls_hede_product_info hd on hd.bar_code = a.bar_code
+        LEFT JOIN xls_product_imeis imei ON a.ID=imei.productID and a.companycode = imei.companycode
+        LEFT JOIN xls_product_stocks xs on a.id=xs.productId and a.companycode = xs.companycode
+        LEFT JOIN xls_product_unit pu ON a.XLS_PRODUCT_UNIT_ID=pu.ID  and a.companycode = pu.companycode
+        LEFT JOIN xls_product_sub_unit su ON a.XLS_PRODUCT_MULTIPLE_UNIT_ID=su.XLS_PRODUCT_MULTIPLE_UNIT_ID  and a.companycode = su.companycode
+        LEFT JOIN xls_product_unit_price up ON up.XLS_PRODUCT_ID=a.ID AND up.XLS_PRODUCT_SUB_UNIT_ID=su.ID and a.companycode = up.companycode
+        LEFT JOIN xls_product_photo pp ON a.ID=pp.XLS_PRODUCT_ID AND pp.del_flag = 0  and a.companycode = pp.companycode
+        LEFT JOIN xls_product_rfid rf ON  a.id=rf.productid and a.companycode = rf.companycode
+        where
+        a.del_flag = 0
+        <if test="productIds != null and productIds.size() >0 ">
+            and a.`ID` in
+            <foreach item="productId" index="index" collection="productIds" open="(" separator="," close=")">
+                #{productId}
+            </foreach>
+        </if>
+    </select>
+    <select id="findSynchronizationProduct" resultType="java.lang.String">
+        <![CDATA[
+            select DISTINCT ID from xls_product where  UPDATE_DATE >= #{startTime} and UPDATE_DATE < #{endTime}
+        ]]>
+    </select>
 </mapper>

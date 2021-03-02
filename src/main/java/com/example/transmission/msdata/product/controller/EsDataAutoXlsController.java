@@ -8,6 +8,7 @@ import com.example.transmission.mssdata.autodata.service.impl.AutoDataServiceImp
 import com.example.transmission.mssdata.product.service.impl.MssProductImeiServiceImpl;
 import com.example.transmission.mssdata.product.service.impl.MssProductServiceImpl;
 import com.example.transmission.mssdata.product.service.impl.MssProductStoreServiceImpl;
+import com.example.transmission.thread.SolrIndexService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -46,6 +47,7 @@ public class EsDataAutoXlsController {
     private MsProductImeiServiceImpl msProductImeiServiceImpl;
 
     SimpleDateFormat format=new SimpleDateFormat("yyyy-M-ddHH:mm:ss");
+
     @RequestMapping("esDataAutoXlsFunction")
     @ResponseBody
     @Scheduled(cron = "0 0/10 * * * ?")
@@ -55,6 +57,7 @@ public class EsDataAutoXlsController {
         Date sysTime = autoDataServiceImpl.getSysDate();
         Date updateTime = autoDataServiceImpl.getUpdateAllTime("auto_product_store_imei_all");
         log.info(accountIdList.size()+"=========accountid总数");
+        List<String> idsList = new ArrayList<>();
         for (Integer accountId : accountIdList) {
             if (saveAllProduct(accountId,sysTime,updateTime)){
                 saveAllProductStore(accountId,sysTime,updateTime);
@@ -66,6 +69,11 @@ public class EsDataAutoXlsController {
         msProductServiceImpl.callProductNew(updateTime);
         msProductStoreServiceImpl.callPinitKc(updateTime);
         msProductImeiServiceImpl.callPsynImei(updateTime);
+        idsList = msProductServiceImpl.getSynchronizationProduct(sysTime,updateTime);
+        log.info("执行solr同步"+idsList.size());
+        SolrIndexService solrIndexService = new SolrIndexService(idsList);
+        solrIndexService.start();
+        log.info("执行solr同步完毕===========");
         autoDataServiceImpl.updateAutoProductAllDate("auto_product_store_imei_all", sysTime);
         log.info("esDataAutoXlsFunction执行完毕=================");
     }
@@ -104,7 +112,7 @@ public class EsDataAutoXlsController {
                 log.error(e.getMessage());
             }
         }
-         /*for (int i = 0; i < productList.size(); i++) {
+         for (int i = 0; i < productList.size(); i++) {
             try {
 
                if (i + OPERATER_NUM > listSize) {//作用为toIndex最后没有2000条数据则剩余几条newList中就装几条
@@ -121,7 +129,7 @@ public class EsDataAutoXlsController {
             } catch (Exception e) {
                 log.error(e.getMessage());
             }
-        }*/
+        }
         autoDataServiceImpl.updateTableInfo(acoundid, "xls_auto_product", sysTime);
         return true;
     }
@@ -150,13 +158,13 @@ public class EsDataAutoXlsController {
                 return false;
             }
             try {
+                for (int i = 0; i < productStoreList.size(); i++) {
+                    msProductStoreServiceImpl.saveProductStore(productStoreList.get(i));
+                }
                 if (delproductStoreList!=null && delproductStoreList.size()>0){
                     for (Map<String, Object> map : delproductStoreList) {
                         msProductStoreServiceImpl.updateDelProductStore(map);
                     }
-                }
-                for (int i = 0; i < productStoreList.size(); i++) {
-                    msProductStoreServiceImpl.saveProductStore(productStoreList.get(i));
                 }
             }catch (Exception e){
                 log.error(e.getMessage());
@@ -188,13 +196,13 @@ public class EsDataAutoXlsController {
                 return false;
             }
             try {
+                for (int i = 0; i < productImeiList.size(); i++) {
+                        msProductImeiServiceImpl.saveProductImei(productImeiList.get(i));
+                }
                 if (deleteproductImeiList!=null && deleteproductImeiList.size()>0){
                     for (Map<String, Object> map : deleteproductImeiList) {
                         msProductImeiServiceImpl.updateDelProductImei(map);
                     }
-                }
-                for (int i = 0; i < productImeiList.size(); i++) {
-                        msProductImeiServiceImpl.saveProductImei(productImeiList.get(i));
                 }
             }catch (Exception e){
                 log.error(e.getMessage());

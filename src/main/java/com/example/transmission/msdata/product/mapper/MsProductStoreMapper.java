@@ -20,4 +20,6 @@ public interface MsProductStoreMapper {
 
     void updateDelProductStore(Map<String, Object> map);
     void callPinitKc(@Param("updateTime") Date updateTime);
+
+    List<String> findSynchronizationStock(@Param("endTime") Date sysTime, @Param("startTime")Date updateTime);
 }

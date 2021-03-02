@@ -1,5 +1,6 @@
 package com.example.transmission.msdata.product.mapper;
 
+import com.example.transmission.msdata.product.entity.Product;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -20,5 +21,9 @@ public interface MsProductMapper {
     int findProductExist(Map<String, Object> product);
 
     void updateProductInfo(Map<String, Object> product);
+
+    List<Product> productSolrdataList(@Param("productIds") List<String> productIds);
+
+    List<String> findSynchronizationProduct(@Param("endTime") Date sysTime, @Param("startTime")Date updateTime);
 
 }

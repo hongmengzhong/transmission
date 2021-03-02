@@ -14,5 +14,7 @@ public interface MsProductImeiMapper {
     void deleteProductImei(Map<String, Object> map);
     void updateDelProductImei(Map<String, Object> map);
     void callPsynImei(@Param("updateTime") Date updateTime);
+
+    List<String> findSynchronizationImei(@Param("endTime") Date sysTime, @Param("startTime")Date updateTime);
 }
 
